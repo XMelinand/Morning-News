@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./App.css";
 import { Input, Button, Modal } from "antd";
 import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
-function ScreenHome() {
+
+function ScreenHome(props) {
   // STATES
   const [modal2Visible, setModal2Visible] = useState(false);
 
@@ -26,13 +28,14 @@ function ScreenHome() {
       body: `firstName=${first}&lastName=${last}&email=${mail}&password=${pass}`,
     });
     var response = await rawResponse.json();
-    console.log("coucou", response);
+    console.log("response signUp", response);
 
     if (response.success == false) {
       setError(response.error);
       setModal2Visible(true)
     } else {
       setIsLogin(true);
+      props.addUserToken(response.userToken)
     }
   }
 
@@ -44,13 +47,14 @@ function ScreenHome() {
         body: `email=${mail}&password=${pass}`,
       });
       var response = await rawResponse.json();
-      console.log("reponse back", response);
+      console.log("reponse signIn", response);
 
     if (response.logged == false) {
       setError(response.error);
       setModal2Visible(true)
     } else {
         setIsLogin(true);
+        props.addUserToken(response.userToken)
       }
     
   }
@@ -141,4 +145,12 @@ function ScreenHome() {
   }
 }
 
-export default ScreenHome;
+function mapDispatchToProps(dispatch) {
+  return {
+    addUserToken: function (token) {
+      dispatch({ type: "addUserToken", userToken: token });
+    },
+  };
+}
+
+export default connect(null, mapDispatchToProps)(ScreenHome);

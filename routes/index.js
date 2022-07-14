@@ -13,7 +13,7 @@ router.get("/", function (req, res, next) {
 });
 // SIGN UP
 router.post("/sign-up", async function (req, res, next) {
-  let userFind = await UserModel.findOne({ email: req.body.email });
+  var userFind = await UserModel.findOne({ email: req.body.email });
   var result = false;
   var error;
   var emptyValue = true;
@@ -28,7 +28,7 @@ router.post("/sign-up", async function (req, res, next) {
   ) {
     emptyValue = false;
   }
-  if (emptyValue == false) {
+  if (emptyValue == false && !userFind) {
     // Password encryption
 const cost = 10;
 const hash = bcrypt.hashSync(req.body.password, cost);
@@ -57,7 +57,10 @@ const hash = bcrypt.hashSync(req.body.password, cost);
     result = true;
   }
   //RES.JSON
-  res.json({ result, newUserSaved, error, emptyValue, success });
+  if (newUserSaved){
+    res.json({result, newUserSaved, error, emptyValue, success, userToken : newUserSaved.token });
+  } else {
+  res.json({ result, error, emptyValue, success, userToken : userFind.token });}
 });
 
 // SIGN-IN
@@ -65,23 +68,29 @@ router.post("/sign-in", async function (req, res, next) {
   var userFind = await UserModel.findOne({ email: req.body.email });
   console.log(userFind);
   var error;
+  var passOk = false;
   var logged = false;
 
-  if( !req.body.email || !req.body.password) {
+  var password = req.body.password
+if (bcrypt.compareSync(password, userFind.password)) {
+  passOk = true 
+}
+
+  if( !req.body.email || !password) {
     error = "Please fill all fields";
   }
   else if (!userFind) { 
     error = errMail
   }
-  else if (userFind && userFind.password != req.body.password) {
+  else if (userFind && !passOk) {
       error = errPwd;
     }
-  else if (userFind && userFind.password == req.body.password) {
+  else if (userFind && passOk) {
     logged = true;
   }
 
   // RES.JSON
-  res.json({ userFind, logged, error});
+  res.json({ userFind, logged, error,  userToken: userFind.token });
 });
 
 module.exports = router;
