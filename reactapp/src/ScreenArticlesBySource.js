@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { connect } from "react-redux";
 import "./App.css";
 import { Card, Icon, Modal, Button } from "antd";
 import Nav from "./Nav";
@@ -7,7 +8,7 @@ import Nav from "./Nav";
 const { Meta } = Card;
 
 // FONCTION COMPOSANT
-function ScreenArticlesBySource() {
+function ScreenArticlesBySource(props) {
   //GET PARAM ID
   var { id } = useParams();
   console.log("id", id);
@@ -54,9 +55,9 @@ function ScreenArticlesBySource() {
       <Nav />
       <div className="Banner" />
       <div className="Card">
-        {articlesList.map(function (articleCard) {
+        {articlesList.map(function (articleCard, i) {
           return (
-            <div>
+            <div key={i}>
               <Card
                 style={{
                   width: 300,
@@ -78,7 +79,13 @@ function ScreenArticlesBySource() {
                   />,
 
                   // ICON LIKE ARTICLE
-                  <Icon type="like" key="ellipsis" />,
+                  <Icon
+                    type="like"
+                    key="ellipsis"
+                    onClick={() => {
+                      props.addToWishList(articleCard);
+                    }}
+                  />,
                 ]}
               >
                 <Meta
@@ -108,5 +115,13 @@ function ScreenArticlesBySource() {
   );
 }
 
-//EXPORT
-export default ScreenArticlesBySource;
+// FONCTION CONTENEUR REDUX
+function mapDispatchToProps(dispatch) {
+  return {
+    addToWishList: function (article) {
+      dispatch({ type: "addArticle", likedArticle: article });
+    },
+  };
+}
+
+export default connect(null, mapDispatchToProps)(ScreenArticlesBySource);

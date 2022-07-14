@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var UserModel = require("../models/users");
+var bcrypt = require('bcrypt');
+var uid2 = require('uid2');
 
 var errPwd = "Invalid password";
 var errMail = "Invalid email";
@@ -13,8 +15,10 @@ router.get("/", function (req, res, next) {
 router.post("/sign-up", async function (req, res, next) {
   let userFind = await UserModel.findOne({ email: req.body.email });
   var result = false;
+  var error;
   var emptyValue = true;
   var success = false;
+
 
   if (
     req.body.email &&
@@ -25,11 +29,16 @@ router.post("/sign-up", async function (req, res, next) {
     emptyValue = false;
   }
   if (emptyValue == false) {
+    // Password encryption
+const cost = 10;
+const hash = bcrypt.hashSync(req.body.password, cost);
+
     var newUser = new UserModel({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: req.body.password,
+      password: hash,
+      token: uid2(32)
     });
     var newUserSaved = await newUser.save();
     success = true;
@@ -44,7 +53,7 @@ router.post("/sign-up", async function (req, res, next) {
     error = "Please fill all fields";
   }
 
-  if (newUser) {
+  if (newUserSaved) {
     result = true;
   }
   //RES.JSON
