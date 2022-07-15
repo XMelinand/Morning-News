@@ -7,11 +7,12 @@ import ScreenMyArticles from './ScreenMyArticles';
 import ScreenSource from './ScreenSource';
 import wishList from './reducers/article';
 import userToken from './reducers/userToken';
+import setLang from './reducers/setLang';
 
 import {Provider} from 'react-redux';
 import {createStore, combineReducers}  from 'redux';
 
-const store = createStore(combineReducers({wishList, userToken}));
+const store = createStore(combineReducers({wishList, userToken, setLang}));
 
 
 

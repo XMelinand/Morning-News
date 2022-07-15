@@ -10,7 +10,7 @@ var options = {
         function(err) { if (err){
         console.log(err);
         } else {
-            console.log('bien connecté')
+            console.log('(***$$$ GET ROLLING BABY $$$***)')
         }
         }
     );

@@ -9,6 +9,8 @@ const { Meta } = Card;
 
 // FONCTION COMPOSANT
 function ScreenArticlesBySource(props) {
+
+  console.log('Stateprops', props.userToken, props.myArticles)
   //GET PARAM ID
   var { id } = useParams();
   console.log("id", id);
@@ -49,6 +51,17 @@ function ScreenArticlesBySource(props) {
     loadArticles();
   }, []);
 
+  async function addArticleToUserFavs (token, content, description, title, imgurl){
+    console.log('article',content, description, title, imgurl,'token',token)
+    let rawResponse = await fetch("/addArticle", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `content=${content}&userToken=${token}&description=${description}&title=${title}&urlToImage=${imgurl}`,
+    });
+    var response = await rawResponse.json();
+    console.log("reponse addshit", response);
+  }
+
   //COMPONENT RETURN
   return (
     <div>
@@ -83,7 +96,8 @@ function ScreenArticlesBySource(props) {
                     type="like"
                     key="ellipsis"
                     onClick={() => {
-                      props.addToWishList(articleCard);
+                      props.addToWishList(articleCard); 
+                      addArticleToUserFavs(props.userToken,articleCard.content, articleCard.description, articleCard.title, articleCard.urlToImage);
                     }}
                   />,
                 ]}
@@ -124,4 +138,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(ScreenArticlesBySource);
+//STATE-PROPS
+function mapStateToProps(state) {
+  return { myArticles: state.wishList, userToken : state.userToken};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScreenArticlesBySource);

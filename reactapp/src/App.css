@@ -54,12 +54,20 @@ h4 {
   background-repeat: no-repeat;
   background-size: cover;
   opacity: 0.8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .Card{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.flag{
+  width: 35px;
+  margin-right: 10px;
 }
 
 

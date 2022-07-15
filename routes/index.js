@@ -93,4 +93,19 @@ if (bcrypt.compareSync(password, userFind.password)) {
   res.json({ userFind, logged, error,  userToken: userFind.token });
 });
 
+router.post("/addArticle", async function (req, res, next) {
+  var userFind = await UserModel.findOne({ token: req.body.userToken});
+  console.log(userFind);
+  userFind.wishList.push(
+    {
+    content :req.body.content, 
+    description :req.body.description, 
+    title :req.body.title, 
+    urlToImage :req.body.urlToImage, 
+    }
+  );
+  await userFind.save();
+  res.json({ success: true, userFind});
+});
+
 module.exports = router;
