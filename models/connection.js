@@ -1,12 +1,13 @@
 var mongoose = require('mongoose');
-import { DB_KEY } from '@env'
+var config = require('../config')
+console.log(JSON.stringify(config))
 
 var options = {
     connectTimeoutMS: 5000,
     useNewUrlParser: true,
     useUnifiedTopology : true
     }
-    mongoose.connect(`mongodb+srv://admin:${DB_KEY}.sgrgl.mongodb.net/morningnews?retryWrites=true&w=majority`,
+    mongoose.connect(`mongodb+srv://admin:${config.MONGO_KEY}.sgrgl.mongodb.net/morningnews?retryWrites=true&w=majority`,
         options,        
         function(err) { if (err){
         console.log(err);
@@ -15,3 +16,4 @@ var options = {
         }
         }
     );
+

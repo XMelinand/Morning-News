@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import "./App.css";
 import { Card, Icon, Modal, Button } from "antd";
 import Nav from "./Nav";
+import config from "./config"
+
 
 const { Meta } = Card;
 
@@ -39,7 +41,7 @@ function ScreenArticlesBySource(props) {
   useEffect(() => {
     async function loadArticles() {
       var rawResponse = await fetch(
-        `https://newsapi.org/v2/top-headlines?sources=${id}&apiKey=c54a2e49632748939b269672fa2c2370`
+        `https://newsapi.org/v2/top-headlines?sources=${id}&apiKey=${config.NEWS_KEY}`
       );
       var response = await rawResponse.json();
       response = response.articles;
