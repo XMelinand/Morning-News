@@ -93,9 +93,19 @@ if (bcrypt.compareSync(password, userFind.password)) {
   res.json({ userFind, logged, error,  userToken: userFind.token });
 });
 
+// ADD LIKED ARTICLE TO DB
 router.post("/addArticle", async function (req, res, next) {
+  var success = false;
   var userFind = await UserModel.findOne({ token: req.body.userToken});
-  console.log(userFind);
+    
+  if(userFind){
+  var findArticle = false;
+  for (let i = 0; i < userFind.wishList.length; i++) {
+  if (userFind.wishList[i].title == req.body.title) {
+      findArticle = true;
+  }
+}
+if (!findArticle) {
   userFind.wishList.push(
     {
     content :req.body.content, 
@@ -104,8 +114,44 @@ router.post("/addArticle", async function (req, res, next) {
     urlToImage :req.body.urlToImage, 
     }
   );
-  await userFind.save();
-  res.json({ success: true, userFind});
+  var articleSaved = await userFind.save();
+  if(articleSaved){
+    success = true;
+  }}
+  }
+
+  res.json({ success: success, userFind});
 });
 
+//LOAD LIKED ARTICLES FROM DB
+router.post("/loadArticles", async function (req, res, next) {
+  var success = false;
+  var logged;
+
+  let userFind = await UserModel.findOne({token: req.body.userToken});
+  if(userFind){
+  let wishList = userFind.wishList;
+  success = true;
+  logged=true;
+  console.log('DB wishlist', wishList);
+
+  res.json({success, logged, wishList})
+}
+else { 
+  logged = false
+  res.json({ success,logged, error: 'you must be logged in'})
+}
+})
+// .then(function (
+// REMOVE LIKED ARTICLE FROM DB
+router.delete("/deleteArticles", async function (req, res, next) {
+  var success = false;
+  console.log(req.body.position, req.body.userToken);
+  let userFind = await UserModel.findOne({token: req.body.userToken});
+  if(userFind){
+    userFind.wishList.splice(req.body.position,1)
+    await userFind.save()
+  res.json({success})
+  }
+})
 module.exports = router;
