@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { List, Avatar } from "antd";
 import { connect } from "react-redux";
 import Nav from "./Nav";
+import {API_KEY} from "@env";
 
 function ScreenSource(props) {
   const [sourceList, setSourceList] = useState([]);
@@ -24,7 +25,7 @@ function ScreenSource(props) {
 
     async function loadData() {
       var rawResponse = await fetch(
-        `https://newsapi.org/v2/top-headlines/sources?apiKey=c54a2e49632748939b269672fa2c2370&language=${language}&country=${country}`
+        `https://newsapi.org/v2/top-headlines/sources?apiKey=${API_KEY}&language=${language}&country=${country}`
       );
       var response = await rawResponse.json();
       response = response.sources;

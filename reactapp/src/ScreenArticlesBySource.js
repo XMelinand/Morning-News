@@ -4,16 +4,15 @@ import { connect } from "react-redux";
 import "./App.css";
 import { Card, Icon, Modal, Button } from "antd";
 import Nav from "./Nav";
+import {API_KEY} from '@env';
 
 const { Meta } = Card;
 
 // FONCTION COMPOSANT
 function ScreenArticlesBySource(props) {
 
-  console.log('Stateprops', props.userToken, props.myArticles)
   //GET PARAM ID
   var { id } = useParams();
-  console.log("id", id);
 
   // STATES
   const [articlesList, setArticlesList] = useState([]);
@@ -41,25 +40,22 @@ function ScreenArticlesBySource(props) {
   useEffect(() => {
     async function loadArticles() {
       var rawResponse = await fetch(
-        `https://newsapi.org/v2/top-headlines?sources=${id}&apiKey=c54a2e49632748939b269672fa2c2370`
+        `https://newsapi.org/v2/top-headlines?sources=${id}&apiKey=${API_KEY}`
       );
       var response = await rawResponse.json();
       response = response.articles;
-      console.log("merde", response);
       setArticlesList(response);
     }
     loadArticles();
   }, []);
 
   async function addArticleToUserFavs (token, content, description, title, imgurl){
-    console.log('article',content, description, title, imgurl,'token',token)
     let rawResponse = await fetch("/addArticle", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: `content=${content}&userToken=${token}&description=${description}&title=${title}&urlToImage=${imgurl}`,
     });
     var response = await rawResponse.json();
-    console.log("reponse addshit", response);
   }
 
   //COMPONENT RETURN
