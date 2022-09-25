@@ -10,7 +10,6 @@ function ScreenMyArticles(props) {
 
   const [dbWishlist, setDbWishList] = useState([]);
   const [logged, setLogged] = useState([])
-  console.log("liked", dbWishlist);
 
 // LOAD DB LIKED ARTICLES 
   useEffect(() => {
@@ -22,7 +21,6 @@ function ScreenMyArticles(props) {
       }
       );
       var response = await rawResponse.json();
-      console.log(response);
       if (response.success) {
       setDbWishList(response.wishList);}
       if(!response.logged){

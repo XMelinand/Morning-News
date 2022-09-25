@@ -28,7 +28,6 @@ function ScreenHome(props) {
       body: `firstName=${first}&lastName=${last}&email=${mail}&password=${pass}`,
     });
     var response = await rawResponse.json();
-    console.log("response signUp", response);
 
     if (response.success == false) {
       setError(response.error);

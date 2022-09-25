@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var config = require('../config')
-console.log(JSON.stringify(config))
 
 var options = {
     connectTimeoutMS: 5000,

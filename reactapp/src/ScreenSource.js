@@ -21,8 +21,6 @@ function ScreenSource(props) {
       country = "es";
     }
 
-    console.log("props", props.setLang);
-
     async function loadData() {
       var rawResponse = await fetch(
         `https://newsapi.org/v2/top-headlines/sources?apiKey=${config.NEWS_KEY}&language=${language}&country=${country}`
@@ -41,7 +39,6 @@ function ScreenSource(props) {
     }
     loadData();
   }, [props.setLang]);
-  console.log("caca", sourceList);
 
   return (
     <div>
